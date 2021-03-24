@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shihang.usermerge.usermergeconsmerinsertold.mapper.PointMapper">
+    <select id="findUserPoint" resultType="com.shihang.usermerge.usermergeconsmerinsertold.model.dto.UserPointDTO">
+        select CustomerGuid customerGuid,
+               CustomerId   customerId,
+               CityFlag     cityFlag,
+               Points       points
+        from CustomerPoint where customerGuid in
+        <foreach collection="list" item="guid" open="(" close=")" separator=",">
+            #{guid}
+        </foreach>
+    </select>
+
+    <select id="delPoints" resultType="java.lang.Integer">
+        update CustomerPoint
+        set Points        = Points - #{points},
+            HistoryPoints = HistoryPoints - #{points}
+        where CustomerGuid = #{customerGuid}
+    </select>
+
+    <select id="findCustomerPoint" resultType="com.shihang.usermerge.usermergeconsmerinsertold.model.dto.CustomerPoint">
+        select ID id,
+               Points points,
+               UpdatedOnUtc updatedOnUtc,
+               CreatedOnUtc createdOnUtc,
+               CustomerId customerId,
+               CustomerGuid customerGuid,
+               CityFlag cityFlag,
+               HistoryPoints historyPoints,
+               timescol timescol
+        from CustomerPoint
+        where CustomerGuid = #{customerGuid}
+    </select>
+
+    <insert id="pointDetail">
+    </insert>
+
+    <update id="addPoints">
+        update CustomerPoint
+        set Points        = Points + #{points},
+        HistoryPoints = HistoryPoints + #{points}
+        where CustomerGuid = #{customerGuid}
+    </update>
+</mapper>
